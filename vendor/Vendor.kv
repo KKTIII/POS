@@ -1,0 +1,242 @@
+#:import hex kivy.utils.get_color_from_hex
+
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 14
+
+<VendorWindow>:
+    id: main_win
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: (1,1,1, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        id: header
+        size_hint_y: None
+        height: 40
+        canvas.before:
+            Color:
+                rgba: (140/255,158/255,237/255,1)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        FlatButton:
+            text:""
+            id:sub_header
+            text: ''
+            color: (1,1,1,1)
+            on_press:root.go_back()
+            size_hint_x:.1
+            bold: True
+
+        Label:
+            text: 'Supermarket Inventory System'
+            size_hint_x: .9
+            bold: True
+            color: (1,1,1,1)
+        FlatButton:
+            id: loggedin_user
+            text: ''
+            color: (1,1,1,1)
+            underline:True
+            size_hint_x:.1
+            bold: True
+        FlatButton:
+            id: file_trigger
+            text: 'Logout'
+            on_release: root.logout()
+            size_hint_x: .1
+            bold: True
+        Label:
+            size_hint_x:.1
+
+    BoxLayout:
+        id: current
+        size_hint_y: None
+        height: 50
+        canvas.before:
+            Color:
+                rgba: (1,1,1, 1)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        Button:
+            text: 'Current Item:'
+            background_normal: ''
+            background_color: (167/255,99/255,235/255,.5)
+            size_hint_x: .4
+        Button:
+            id: current_product
+            text: 'Default Product'
+            background_normal: ''
+            background_color: (167/255,99/255,235/255,.5)
+        Button:
+            id: current_price
+            text: '0.00'
+            background_normal: ''
+            background_color: (167/255,99/255,235/255,.5)
+            size_hint_x: .2
+
+    BoxLayout:
+        padding: 10
+        BoxLayout:
+            id: product_details
+            orientation: "vertical"
+            size_hint_x:.8
+            spacing: 10
+
+            BoxLayout:
+                id: product_inputs
+                size_hint_y: None
+                height: 30
+                spacing: 5
+
+                Label:
+                    text: "Product Name:"
+                    bold: True
+                    color:hex('#000000')
+                    size_hint_x: .4
+                TextInput:
+                    id: product_name_input
+                    size_hint_x: .8
+                    multiline: False
+                    on_text_validate: root.check_product()
+
+
+                Label:
+                    text: "Quantity:"
+                    bold: True
+                    color:hex('#000000')
+                    size_hint_x: .3
+                TextInput:
+                    id: qty_inp
+                    size_hint_x: .2
+                    multiline:False
+                    on_text_validate: root.update_purchases()
+                Label:
+                    text:''
+                    size_hint_x: .2
+
+                Button:
+                    background_normal: ''
+                    background_color: (140/255,158/255,237/255,1)
+                    text: 'Add'
+                    size_hint_x: .3
+                    on_release: root.update_purchases()
+                Label:
+                    text:''
+                    size_hint_x: .2
+                Spinner:
+                    id: spinner_id
+                    text:""
+                    on_text:root.product_choice(spinner_id.text)
+            BoxLayout:
+                id: add_to_cart
+                orientation: 'vertical'
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    canvas.before:
+                        Color:
+                            rgba: (140/255,158/255,237/255,1)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                    Label:
+                        text: 'Code'
+                        size_hint_x: .2
+                    Label:
+                        text: 'Product name'
+                        size_hint_x: .3
+                    Label:
+                        text: 'Qty'
+                        size_hint_x: .1
+                    Label:
+                        text: 'Disc'
+                        size_hint_x: .1
+                    Label:
+                        text: 'Price'
+                        size_hint_x: .1
+                    Label:
+                        text: 'Product total'
+                        size_hint_x: .2
+                Screen:
+                    ScrollView:
+                        scroll_type:['bars','content']
+                        orientation:'vertical'
+                        size_hint_y:1
+                        do_scroll_x:False
+                        do_scroll_y:True
+                        bar_width:10
+
+                        GridLayout:
+                            id: products
+                            size:(root.width,root.height)
+                            size_hint_y:8
+                            size_hint_x:1
+                            cols:1
+                            height:self.minimum_height
+
+
+                BoxLayout:
+                    size_hint_y:.3
+                    Label:
+                        size_hint_x:.2
+                    Button:
+                        size_hint:None,None
+                        width:100
+                        height:50
+                        text: 'Cancel'
+                        background_color: (140/255,158/255,237/255,1)
+                        on_press: root.cancel_transaction()
+
+
+                    Button:
+                        size_hint:None,None
+                        width:150
+                        height:50
+                        background_color: (140/255,158/255,237/255,1)
+                        text: 'Next Transaction'
+                        on_press: root.update_transaction()
+                    Label:
+                        size_hint_x:.2
+
+
+        Screen:
+            size_hint_x:.3
+            ScrollView:
+                scroll_type:['bars','content']
+                orientation:'vertical'
+                size_hint_y:1
+                do_scroll_x:False
+                do_scroll_y:True
+                bar_width:10
+                GridLayout:
+                    size:(root.width,root.height)
+                    size_hint_y:5
+                    size_hint_x:1
+                    cols:1
+                    height:self.minimum_height
+                    BoxLayout:
+                        id: preview
+                        orientation: 'vertical'
+                        size_hint_x: 1
+
+                        TextInput:
+                            id: receipt_preview
+                            readonly: True
+                            text: ''
+    BoxLayout:
+        id: footer
+        size_hint_y: None
+        height: 30
+        canvas.before:
+            Color:
+                rgba: (140/255,158/255,237/255,1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            text: 'KKT'

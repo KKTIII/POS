@@ -1,0 +1,368 @@
+#:import hex kivy.utils.get_color_from_hex
+#:import Window kivy.core.window
+
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 14
+
+
+<AdminWindow>:
+    id: main_win
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: (1,1,1,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        id: top_nav
+        size_hint_y: None
+        height: 30
+        canvas.before:
+            Color:
+                rgba: (167/255,99/255,235/255,.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        FlatButton:
+            id: file_trigger
+            text: 'Logout'
+            on_release: root.logout()
+            size_hint: (.1,None)
+            height: 30
+            bold: True
+            color: (68/255,0/255,109/255,1)
+
+        Label:
+            text: 'Admin Dashboard'
+            bold: True
+            size_hint: (.9,None)
+            height: 30
+        FlatButton:
+            id: loggedin_user
+            text: ''
+            color: (68/255,0/255,109/255,1)
+            underline:True
+            size_hint_x:.1
+            bold: True
+        Label:
+            size_hint_x:.1
+    BoxLayout:
+        id: content_nav
+
+        BoxLayout:
+            id: nav_tabs
+            size_hint_x: .2
+            orientation: 'vertical'
+            spacing: 3
+            canvas.before:
+                Color:
+                    rgba: (140/255,158/255,237/255,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            ToggleButton:
+                id: user_toggle
+                text: 'Manage Users'
+                size_hint_y: .1
+                state: 'down'
+                background_color: (140/255,158/255,237/255,1)
+                background_normal: ''
+                group: 'admin_navs'
+                on_state: root.change_screen(self)
+            ToggleButton:
+                id: products_toggle
+                text: 'Manage Products'
+                size_hint_y: .1
+                background_color: (140/255,158/255,237/255,1)
+                background_normal: ''
+                group: 'admin_navs'
+                on_state: root.change_screen(self)
+            ToggleButton:
+                id: analysis_toggle
+                text: 'Product Analysis'
+                size_hint_y: .1
+                background_color: (140/255,158/255,237/255,1)
+                background_normal: ''
+                group: 'admin_navs'
+                on_state: root.change_screen(self)
+            ToggleButton:
+                id: check_stock_toggle
+                text: 'Check Stock'
+                size_hint_y: .1
+                background_color: (140/255,158/255,237/255,1)
+                background_normal: ''
+                group: 'admin_navs'
+                on_state: root.change_screen(self)
+            Button:
+                id: operator_toggle
+                text: 'Perform Transaction'
+                size_hint_y: .1
+                background_color: (140/255,158/255,237/255,1)
+                background_normal: ''
+                on_press: root.direct_to_operator()
+            Label:
+                id: sp
+                text: ''
+                size_hint_y: .7
+        BoxLayout:
+            id: all_content
+            size_hint_x: .8
+            padding: (20,10)
+            ScreenManager:
+                id: scrn_mngr
+                Screen:
+                    id: scrn_content
+                    name: 'scrn_content'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: 10
+                        BoxLayout:
+                            id: scrn_contents
+                        BoxLayout:
+                            id: ops_fields
+                            spacing: 10
+                            size_hint_y: None
+                            height: 35
+                        BoxLayout:
+                            id: ops_btns
+                            spacing: 10
+                            size_hint_y: None
+                            height: 45
+                            Button:
+                                id: crud_add
+                                text: 'Add User'
+                                on_release: root.add_user_fields()
+                            Button:
+                                id: crud_update
+                                text: 'Update User'
+                                on_release: root.update_user_fields()
+                            Button:
+                                id: crud_remove
+                                text: 'Remove User'
+                                on_release: root.remove_user_fields()
+                Screen:
+                    id: scrn_product_content
+                    name: 'scrn_product_content'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: 10
+                        BoxLayout:
+                            id: scrn_product_contents
+                        BoxLayout:
+                            id: ops_fields_p
+                            spacing: 10
+                            size_hint_y: None
+                            height: 35
+                        BoxLayout:
+                            id: ops_btns_p
+                            spacing: 10
+                            size_hint_y: None
+                            height: 45
+                            Button:
+                                id: crud_add_p
+                                text: 'Add Product'
+                                on_release: root.add_product_fields()
+                            Button:
+                                id: crud_update_p
+                                text: 'Update Product'
+                                on_release: root.update_product_fields()
+                            Button:
+                                id: crud_remove_p
+                                text: 'Remove Product'
+                                on_release: root.remove_product_fields()
+                Screen:
+                    id: scrn_analysis
+                    name: 'scrn_analysis'
+                    ScrollView:
+                        scroll_type:['bars','content']
+                        orientation:'vertical'
+                        size_hint_y:1
+                        do_scroll_x:False
+                        do_scroll_y:True
+                        bar_width:10
+                        GridLayout:
+                            size:(root.width,root.height)
+                            size_hint_y:10
+                            size_hint_x:1
+                            cols:1
+                            height:self.minimum_height
+
+                            BoxLayout:
+                                id: product_details
+                                orientation: "vertical"
+                                size_hint_y:None
+                                height:self.minimum_height
+                                size_hint_x:1
+
+                                spacing: 40
+
+                                BoxLayout:
+                                    id: product_inputs
+                                    size_hint_y: None
+                                    height: 30
+                                    spacing: 5
+
+
+
+                                    Label:
+                                        text: "Start Date:"
+                                        bold: True
+                                        color:hex('#000000')
+                                        size_hint_x: .4
+                                    TextInput:
+                                        id: start_date_input
+                                        size_hint_x: .4
+                                        multiline: False
+                                        hint_text:'E.g. 2021-03-31'
+
+                                    Label:
+                                        text: "End Date:"
+                                        bold: True
+                                        color:hex('#000000')
+                                        size_hint_x: .3
+                                    TextInput:
+                                        id: end_date_input
+                                        size_hint_x: .4
+                                        multiline:False
+                                        hint_text:'E.g. 2021-03-31'
+                                    Label:
+                                        text:''
+                                        size_hint_x: .2
+
+                                    Button:
+                                        background_normal: ''
+                                        background_color: (140/255,158/255,237/255,1)
+                                        text: 'Search'
+                                        size_hint_x: .3
+                                        on_release: root.transaction_summary()
+
+                                    Label:
+                                        text:''
+                                        size_hint_x: .2
+                                    Button:
+                                        id:total
+                                        text:""
+                                        background_color: (1,1,1,1)
+                                        background_normal: ''
+                                        size_hint_x:.4
+
+
+                                BoxLayout:
+                                    id: add_to_cart
+                                    orientation: 'vertical'
+                                    BoxLayout:
+                                        size_hint_y: None
+                                        height: 30
+                                        canvas.before:
+                                            Color:
+                                                rgba: (140/255,158/255,237/255,1)
+                                            Rectangle:
+                                                size: self.size
+                                                pos: self.pos
+                                        Label:
+                                            text: 'Id'
+                                            size_hint_x: .2
+                                        Label:
+                                            text: 'Date'
+                                            size_hint_x: .2
+                                        Label:
+                                            text: 'Total'
+                                            size_hint_x: .2
+                                        Label:
+                                            text: 'Operator'
+                                            size_hint_x: .2
+                                        Label:
+                                            text: 'Purchased'
+                                            size_hint_x: .8
+
+                                    GridLayout:
+                                        id: transaction_display
+                                        cols: 1
+                                        size_hint_y:1
+
+
+
+                Screen:
+                    id: scrn_check
+                    name: 'scrn_check'
+                    ScrollView:
+                        padding: 10
+                        scroll_type:['bars','content']
+                        orientation:'vertical'
+                        BoxLayout:
+                            id: check_product_details
+                            orientation: "vertical"
+                            size_hint_y:None
+                            height:self.minimum_height
+                            size_hint_x:1
+
+                            spacing: 40
+
+                            BoxLayout:
+                                id: check_product_inputs
+                                size_hint_y: None
+                                height: 30
+                                spacing: 5
+
+
+
+                                Label:
+                                    text: "Product Name:"
+                                    bold: True
+                                    color:hex('#000000')
+                                    size_hint_x: .4
+                                TextInput:
+                                    id: check_product_input
+                                    size_hint_x: .4
+                                    multiline: False
+                                    on_text_validate:  root.check_stock()
+
+                                Label:
+                                    text:''
+                                    size_hint_x: .2
+
+                                Button:
+                                    background_normal: ''
+                                    background_color: (140/255,158/255,237/255,1)
+                                    text: 'Check'
+                                    size_hint_x: .3
+                                    on_release: root.check_stock()
+
+                                Label:
+                                    text:''
+                                    size_hint_x: .2
+
+
+                            BoxLayout:
+                                id: check_add_to_cart
+                                orientation: 'vertical'
+                                BoxLayout:
+                                    size_hint_y: None
+                                    height: 30
+                                    canvas.before:
+                                        Color:
+                                            rgba: (140/255,158/255,237/255,1)
+                                        Rectangle:
+                                            size: self.size
+                                            pos: self.pos
+                                    Label:
+                                        text: 'Id'
+                                        size_hint_x: .2
+                                    Label:
+                                        text: 'Product Name'
+                                        size_hint_x: .2
+                                    Label:
+                                        text: 'Stock'
+                                        size_hint_x: .2
+                                    Label:
+                                        text: 'Sold'
+                                        size_hint_x: .2
+
+                                GridLayout:
+                                    id: check_stock_display
+                                    cols: 1
+

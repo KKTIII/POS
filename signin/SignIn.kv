@@ -1,0 +1,100 @@
+#:import hex kivy.utils.get_color_from_hex
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 16
+
+<SigninWindow>:
+    id: main_win
+    orientation: "vertical"
+    spacing: 10
+    space_x: self.size[0]/3
+    canvas.before:
+        Color:
+            rgba: hex('E8E8E8')
+        Rectangle:
+            size: self.width,self.height
+            pos: self.pos
+
+    BoxLayout:
+        id:log
+        size_hint_y: None
+        height: 50
+        canvas.before:
+            Color:
+                rgba: hex('E5E5E5')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+
+    BoxLayout:
+        padding:10
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: (1,1,1, 1)
+            Rectangle:
+                size: 550,550
+                pos: self.center_x - 250,self.center_y - 250
+
+        BoxLayout:
+            orientation: "vertical"
+
+            BoxLayout:
+                pos_hint: {"center_x":.5}
+                size_hint_y: None
+                height: 200
+                Image:
+                    source: 'images/cart.png'
+                    keep_ratio: True
+                    allow_stretch: True
+
+            Label:
+                id: info
+                text: ''
+                markup: True
+                size_hint_y: None
+                height: 30
+            TextInput:
+                id: username_field
+                hint_text: "Username"
+                multiline: False
+                focus: True
+                on_text_validate: pwd_field.focus = True
+                size_hint: None,None
+                height:40
+                width:350
+                pos_hint: {"center_x":.53}
+
+            Label:
+                id: sp
+                size_hint_y: None
+                height: 20
+            TextInput:
+                id: pwd_field
+                hint_text: "Password"
+                multiline: False
+                password: True
+                on_text_validate: root.validate_user()
+                size_hint: None,None
+                height:40
+                width:350
+                pos_hint: {"center_x":.53}
+
+        Label:
+            id: sp
+            size_hint_y: None
+            height: 40
+        Button:
+            text: "Sign In"
+            size_hint: None,None
+            height: 40
+            background_color: (140/255,158/255,237/255,1)
+            background_normal: ''
+            on_release: root.validate_user()
+            height:40
+            width:300
+            pos_hint: {"center_x":.53}
+        Label:
+            id: sp
+            size_hint_y: None
+            height: 150
